@@ -1,0 +1,25 @@
+imageRGB.c
+-funções básicas
+• Image ImageCopy(img)
+• int ImageIsEqual(img1, img2)
+• Image ImageRotate90CW(img)
+• Image ImageRotate180CW(img)
+-funções de regiões
+• int ImageRegionFillingRecursive(img, u, v, color) - resposta mais ou menos dada
+• int ImageRegionFillingWithQUEUE(img, u, v, color)
+• int ImageRegionFillingwWithSTACK(img, u, v, color)
+• int ImageSegmentation(img, fillFunct)
+
+Outros
+- Análise da complexidade computacional de ImageIsEqual(img1,img2)
+    -DEve ser feito com várias imagens variadas
+    -é necessário análise formal (aka somatorios type thing)
+
+- Escrita de um relatório sucinto (máx. 6 págs.)
+O relatório deverá incluir:
+    • Uma tabela com os resultados dos testes efetuados para a função ImageIsEqual.
+    • A análise formal da sua complexidade.
+    • Para as funções que efetuam a segmentação de uma região será valorizada a comparação das suas diferentes estratégias.
+
+Notas:
+É só entregar imageRGB.c e o relatório, mais nada.
