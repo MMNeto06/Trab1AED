@@ -67,6 +67,13 @@ int main(int argc, char* argv[]) {
   Image image_3 = ImageCreatePalete(4 * 32, 4 * 32, 4);
   ImageSavePPM(image_3, "palete.ppm");
 
+  printf("9) ImageIsEqual\n");
+  assert(ImageIsEqual(image_chess_1, copy_image));
+  printf("image_chess_1 and copy_image are the same passed\n");
+  assert(ImageIsDifferent(image_chess_2, copy_image));
+  printf("image_chess_2 and copy_image are not the same passed\n");
+
+
   ImageDestroy(&white_image);
   ImageDestroy(&black_image);
   if (copy_image != NULL) {

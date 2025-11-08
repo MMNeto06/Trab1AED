@@ -281,13 +281,27 @@ void ImageDestroy(Image* imgp) {
 ///
 /// On success, a new copied image is returned.
 /// (The caller is responsible for destroying the returned image!)
-Image ImageCopy(const Image img) {
+Image ImageCopy(const Image img) { //MIGUEL
   assert(img != NULL);
 
-  // TO BE COMPLETED
-  // ...
+  // TO BE COMPLETED - DONE
+  Image imgcpy = ImageCreate(img->width, img->height);
+  imgcpy->num_colors = img->num_colors;
 
-  return NULL;
+  for(int i = 2; i<img->num_colors; i++){
+    imgcpy->LUT[i] = img->LUT[i];
+  }
+
+  for(uint32 i = 0; i<img->height; i++){
+    for(uint32 j = 0; j<img->width; j++){
+      imgcpy->image[i][j] = img->image[i][j];
+    }
+  }
+
+  //imgcpy->LUT = img->LUT;
+  //imgcpy->image=img->image;
+
+  return imgcpy;
 }
 
 /// Printing on the console
@@ -552,14 +566,24 @@ uint16 ImageColors(const Image img) {
 /// Check if img1 and img2 represent equal images.
 /// NOTE: The same rgb color may correspond to different LUT labels in
 /// different images!
-int ImageIsEqual(const Image img1, const Image img2) {
+int ImageIsEqual(const Image img1, const Image img2) { //MIGUEL
   assert(img1 != NULL);
   assert(img2 != NULL);
 
-  // TO BE COMPLETED
-  // ...
+  // TO BE COMPLETED - DONE
+  if(img1->height != img2->height || img1->width != img2->width){
+    return 0;
+  }
+  
+  for(uint32 i = 0; i < img1->height; i++){
+    for(uint32 j = 0; j < img1->width; j++){
+      if(img1->LUT[img1->image[i][j]] != img2->LUT[img2->image[i][j]] ){
+        return 0;
+      }
+    }
+  }
 
-  return 0;
+  return 1;
 }
 
 int ImageIsDifferent(const Image img1, const Image img2) {
@@ -583,7 +607,7 @@ int ImageIsDifferent(const Image img1, const Image img2) {
 ///
 /// On success, a new image is returned.
 /// (The caller is responsible for destroying the returned image!)
-Image ImageRotate90CW(const Image img) {
+Image ImageRotate90CW(const Image img) { //SILVA
   assert(img != NULL);
 
   // TO BE COMPLETED
@@ -598,7 +622,7 @@ Image ImageRotate90CW(const Image img) {
 ///
 /// On success, a new image is returned.
 /// (The caller is responsible for destroying the returned image!)
-Image ImageRotate180CW(const Image img) {
+Image ImageRotate180CW(const Image img) { //SILVA
   assert(img != NULL);
 
   // TO BE COMPLETED
@@ -632,20 +656,26 @@ int ImageIsValidPixel(const Image img, int u, int v) {
 /// Each function carries out a different version of the algorithm.
 
 /// Region growing using the recursive flood-filling algorithm.
-int ImageRegionFillingRecursive(Image img, int u, int v, uint16 label) {
+int ImageRegionFillingRecursive(Image img, int u, int v, uint16 label) { //MIGUEL
   assert(img != NULL);
   assert(ImageIsValidPixel(img, u, v));
   assert(label < FIXED_LUT_SIZE);
 
   // TO BE COMPLETED
-  // ...
+  if(ImageIsValidPixel(img,u,v) && img->image[u][v] == img->LUT[0]){
+    img->image[u][v] = img->LUT[label];
+    ImageRegionFillingRecursive(img, u+1, v, label);
+    ImageRegionFillingRecursive(img, u, v+1, label);
+    ImageRegionFillingRecursive(img, u-1, v, label);
+    ImageRegionFillingRecursive(img, u, v-1, label);
+  }
 
   return 0;
 }
 
 /// Region growing using a STACK of pixel coordinates to
 /// implement the flood-filling algorithm.
-int ImageRegionFillingWithSTACK(Image img, int u, int v, uint16 label) {
+int ImageRegionFillingWithSTACK(Image img, int u, int v, uint16 label) { //SILVA
   assert(img != NULL);
   assert(ImageIsValidPixel(img, u, v));
   assert(label < FIXED_LUT_SIZE);
@@ -658,7 +688,7 @@ int ImageRegionFillingWithSTACK(Image img, int u, int v, uint16 label) {
 
 /// Region growing using a QUEUE of pixel coordinates to
 /// implement the flood-filling algorithm.
-int ImageRegionFillingWithQUEUE(Image img, int u, int v, uint16 label) {
+int ImageRegionFillingWithQUEUE(Image img, int u, int v, uint16 label) { //SILVA
   assert(img != NULL);
   assert(ImageIsValidPixel(img, u, v));
   assert(label < FIXED_LUT_SIZE);
@@ -679,7 +709,7 @@ int ImageRegionFillingWithQUEUE(Image img, int u, int v, uint16 label) {
 /// last argument, using a function pointer.
 ///
 /// Returns the number of image regions found.
-int ImageSegmentation(Image img, FillingFunction fillFunct) {
+int ImageSegmentation(Image img, FillingFunction fillFunct) { //MIGUEL
   assert(img != NULL);
   assert(fillFunct != NULL);
 
