@@ -656,20 +656,31 @@ int ImageIsValidPixel(const Image img, int u, int v) {
 /// Each function carries out a different version of the algorithm.
 
 /// Region growing using the recursive flood-filling algorithm.
+uint16 originalColor;
+int originalColorFlag = 0;
 int ImageRegionFillingRecursive(Image img, int u, int v, uint16 label) { //MIGUEL
   assert(img != NULL);
-  assert(ImageIsValidPixel(img, u, v));
+  //assert(ImageIsValidPixel(img, u, v));
   assert(label < FIXED_LUT_SIZE);
 
   // TO BE COMPLETED
-  if(ImageIsValidPixel(img,u,v) && img->image[u][v] == img->LUT[0]){
-    img->image[u][v] = img->LUT[label];
-    ImageRegionFillingRecursive(img, u+1, v, label);
-    ImageRegionFillingRecursive(img, u, v+1, label);
-    ImageRegionFillingRecursive(img, u-1, v, label);
-    ImageRegionFillingRecursive(img, u, v-1, label);
+  if(ImageIsValidPixel(img,u,v)){
+    if(originalColorFlag == 0){
+    originalColor = img->image[v][u]; //ESTA LINHA É CANDIDATA A DAR SEGMENTATION FAULT
+    originalColorFlag=1;
+    }
+
+    //ImageIsValidPixel(img,u,v) &&
+    if(img->image[v][u] == originalColor){ //ESTA LINHA É CANDIDATA A DAR SEG FAULT
+      img->image[v][u] = label;
+      ImageRegionFillingRecursive(img, u+1, v, label);
+      ImageRegionFillingRecursive(img, u, v+1, label);
+      ImageRegionFillingRecursive(img, u-1, v, label);
+      ImageRegionFillingRecursive(img, u, v-1, label);
+    }
   }
 
+  originalColorFlag = 0;
   return 0;
 }
 
@@ -714,7 +725,15 @@ int ImageSegmentation(Image img, FillingFunction fillFunct) { //MIGUEL
   assert(fillFunct != NULL);
 
   // TO BE COMPLETED
-  // ...
+  for(uint32 i = 0; i<img->height; i++){
+    for(uint32 j = 0; j<img->width; j++){
+      if(img->image[i][j] == img->LUT[WHITE]){
+        rgb_t newColor = GenerateNextColor(img->LUT[WHITE]+i+j);
+        LUTAllocColor(img, newColor);
+        fillFunct(img, i, j, LUTFindColor(img, newColor));
+      }
+    }
+  }
 
   return 0;
 }

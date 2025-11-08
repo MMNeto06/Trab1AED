@@ -69,10 +69,24 @@ int main(int argc, char* argv[]) {
 
   printf("9) ImageIsEqual\n");
   assert(ImageIsEqual(image_chess_1, copy_image));
-  printf("image_chess_1 and copy_image are the same passed\n");
+  printf("image_chess_1 and copy_image are the same -> passed\n");
   assert(ImageIsDifferent(image_chess_2, copy_image));
-  printf("image_chess_2 and copy_image are not the same passed\n");
+  printf("image_chess_2 and copy_image are not the same -> passed\n");
+  Image image_chess_1_blue = ImageCreateChess(150, 120, 30, 0x0000ff);
+  ImageSavePPM(image_chess_1_blue, "chess_image_1_blue.ppm");
+  assert(ImageIsDifferent(image_chess_1, image_chess_1_blue));
+  printf("image_chess_2 and copy_image are not the same -> passed\n");
+  
+  printf("10) ImageRegionFillingRecursive\n");
+  Image recursive_test = ImageCreateChess(120, 120, 30, 0x00f1ff);
+  uint16 blackColor = 1;
+  printf("Recolored %d pixels\n",ImageRegionFillingRecursive(recursive_test, 105, 15, blackColor));
+  ImageSavePPM(recursive_test, "recursive_test.ppm");
 
+  printf("11) ImageSegmentation with ImageRegionFillingRecursive\n");
+  Image seg_rec_test = ImageCreateChess(120, 120, 30, 0x00f1ff);
+  ImageSegmentation(seg_rec_test, ImageRegionFillingRecursive);
+  ImageSavePPM(seg_rec_test, "segmentation_recursive_test.ppm");
 
   ImageDestroy(&white_image);
   ImageDestroy(&black_image);
@@ -84,6 +98,9 @@ int main(int argc, char* argv[]) {
   ImageDestroy(&image_1);
   ImageDestroy(&image_2);
   ImageDestroy(&image_3);
+  ImageDestroy(&image_chess_1_blue);
+  ImageDestroy(&recursive_test);
+  ImageDestroy(&seg_rec_test);
 
   return 0;
 }
