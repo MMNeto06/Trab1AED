@@ -660,28 +660,38 @@ uint16 originalColor;
 int originalColorFlag = 0;
 int ImageRegionFillingRecursive(Image img, int u, int v, uint16 label) { //MIGUEL
   assert(img != NULL);
-  //assert(ImageIsValidPixel(img, u, v));
+  //assert(ImageIsValidPixel(img, u, v)); //FALAR COM O PROF SOBRE ISTO
   assert(label < FIXED_LUT_SIZE);
 
-  // TO BE COMPLETED
-  if(ImageIsValidPixel(img,u,v)){
-    if(originalColorFlag == 0){
-    originalColor = img->image[v][u]; //ESTA LINHA É CANDIDATA A DAR SEGMENTATION FAULT
-    originalColorFlag=1;
-    }
-
-    //ImageIsValidPixel(img,u,v) &&
-    if(img->image[v][u] == originalColor){ //ESTA LINHA É CANDIDATA A DAR SEG FAULT
-      img->image[v][u] = label;
-      ImageRegionFillingRecursive(img, u+1, v, label);
-      ImageRegionFillingRecursive(img, u, v+1, label);
-      ImageRegionFillingRecursive(img, u-1, v, label);
-      ImageRegionFillingRecursive(img, u, v-1, label);
-    }
+  // TO BE COMPLETED - DONE
+  if (!ImageIsValidPixel(img,u,v)){
+    return 0;
   }
 
-  originalColorFlag = 0;
-  return 0;
+  int root = (originalColorFlag == 0); //verifica se é a chamada original
+
+  if (originalColorFlag == 0) {
+    originalColor = img->image[v][u];
+    originalColorFlag = 1;
+  }
+
+  if (img->image[v][u] != originalColor){
+    return 0;
+  }
+
+  img->image[v][u] = label;
+
+  int count = 1;
+  
+  count+= ImageRegionFillingRecursive(img, u+1, v, label);
+  count+= ImageRegionFillingRecursive(img, u, v+1, label);
+  count+= ImageRegionFillingRecursive(img, u-1, v, label);
+  count+= ImageRegionFillingRecursive(img, u, v-1, label);  
+
+  if(root) {
+    originalColorFlag = 0;
+  }
+  return count;
 }
 
 /// Region growing using a STACK of pixel coordinates to
@@ -727,10 +737,10 @@ int ImageSegmentation(Image img, FillingFunction fillFunct) { //MIGUEL
   // TO BE COMPLETED
   for(uint32 i = 0; i<img->height; i++){
     for(uint32 j = 0; j<img->width; j++){
-      if(img->image[i][j] == img->LUT[WHITE]){
-        rgb_t newColor = GenerateNextColor(img->LUT[WHITE]+i+j);
+      if(img->image[i][j] == WHITE){
+        rgb_t newColor = GenerateNextColor(img->LUT[WHITE]+1000*i*i+100*j); //geração de cor poderia ser mais aleatório
         LUTAllocColor(img, newColor);
-        fillFunct(img, i, j, LUTFindColor(img, newColor));
+        fillFunct(img, j, i, LUTFindColor(img, newColor));
       }
     }
   }

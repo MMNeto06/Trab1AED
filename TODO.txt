@@ -5,7 +5,7 @@ imageRGB.c
 • Image ImageRotate90CW(img)
 • Image ImageRotate180CW(img)
 -funções de regiões
-• int ImageRegionFillingRecursive(img, u, v, color) NOT DONE não devolve nº de recoloridos;
+• int ImageRegionFillingRecursive(img, u, v, color) DONE
 • int ImageRegionFillingWithQUEUE(img, u, v, color)
 • int ImageRegionFillingwWithSTACK(img, u, v, color)
 • int ImageSegmentation(img, fillFunct) DONE falta teste
