@@ -607,13 +607,18 @@ int ImageIsDifferent(const Image img1, const Image img2) {
 ///
 /// On success, a new image is returned.
 /// (The caller is responsible for destroying the returned image!)
-Image ImageRotate90CW(const Image img) { //SILVA
+Image ImageRotate90CW(const Image img) { 
   assert(img != NULL);
 
-  // TO BE COMPLETED
-  // ...
+  Image rotatedImage = ImageCreate(img->height, img->width);
 
-  return NULL;
+  for (int i = 0; i < img->height; i++){
+    for (int j = 0; j <  img->width; j++){
+      rotatedImage->image[j][img->height-1-i] = img->image[i][j];
+    }
+  }
+
+  return rotatedImage;
 }
 
 /// Rotate 180 degrees clockwise (CW).
@@ -625,10 +630,15 @@ Image ImageRotate90CW(const Image img) { //SILVA
 Image ImageRotate180CW(const Image img) { //SILVA
   assert(img != NULL);
 
-  // TO BE COMPLETED
-  // ...
+  Image rotatedImage = ImageCreate(img->width, img->height);
 
-  return NULL;
+  for (int i = 0; i < img->height; i++){
+    for (int j = 0; j < img->width; j++){
+      rotatedImage->image[img->height-1-i][img->width-1-j] = img->image[i][j];
+    }
+  }
+
+  return rotatedImage;
 }
 
 /// Check whether pixel coords (u, v) are inside img.
@@ -696,15 +706,47 @@ int ImageRegionFillingRecursive(Image img, int u, int v, uint16 label) { //MIGUE
 
 /// Region growing using a STACK of pixel coordinates to
 /// implement the flood-filling algorithm.
-int ImageRegionFillingWithSTACK(Image img, int u, int v, uint16 label) { //SILVA
+int ImageRegionFillingWithSTACK(Image img, int u, int v, uint16 label) { 
   assert(img != NULL);
   assert(ImageIsValidPixel(img, u, v));
-  assert(label < FIXED_LUT_SIZE);
+  assert(label < FIXED_LUT_SIZE); 
 
-  // TO BE COMPLETED
-  // ...
+  uint16 targetValue = img->image[v][u];
+  
+  // já preenchido
+  if (targetValue == label){
+    return 0;
+  }
 
-  return 0;
+  Stack* stack = StackCreate(img->height * img->width); 
+  PixelCoords pixelCoords = PixelCoordsCreate(u, v);
+  StackPush(stack, pixelCoords);
+  
+  int count = 0; 
+
+  while (!StackIsEmpty(stack)){
+    PixelCoords currentCoords = StackPop(stack);
+    
+    int current_x = currentCoords.u; 
+    int current_y = currentCoords.v;
+
+    if (img->image[current_y][current_x] != targetValue){
+      continue; 
+    }
+
+    img->image[current_y][current_x] = label; 
+    count++;
+
+    if (ImageIsValidPixel(img, current_x-1, current_y)) StackPush(stack, PixelCoordsCreate(current_x-1, current_y));
+    if (ImageIsValidPixel(img, current_x+1, current_y)) StackPush(stack, PixelCoordsCreate(current_x+1, current_y));
+    if (ImageIsValidPixel(img, current_x, current_y-1)) StackPush(stack, PixelCoordsCreate(current_x, current_y-1));
+    if (ImageIsValidPixel(img, current_x, current_y+1)) StackPush(stack, PixelCoordsCreate(current_x, current_y+1));
+    
+  }
+
+  StackDestroy(&stack);
+
+  return count;
 }
 
 /// Region growing using a QUEUE of pixel coordinates to
@@ -714,10 +756,41 @@ int ImageRegionFillingWithQUEUE(Image img, int u, int v, uint16 label) { //SILVA
   assert(ImageIsValidPixel(img, u, v));
   assert(label < FIXED_LUT_SIZE);
 
-  // TO BE COMPLETED
-  // ...
+  uint16 targetValue = img->image[v][u];
 
-  return 0;
+  // já preenchido
+  if (targetValue == label){
+    return 0; 
+  }
+
+  Queue* queue = QueueCreate(img->height * img->width);
+  PixelCoords pixelCoords = PixelCoordsCreate(u,v);
+  QueueEnqueue(queue, pixelCoords);
+
+  int count = 0; 
+
+  while (!QueueIsEmpty(queue)){
+    PixelCoords currentCoords = QueueDequeue(queue);
+    int current_x = currentCoords.u; 
+    int current_y = currentCoords.v;
+
+    if (img->image[current_y][current_x] != targetValue){
+      continue; 
+    }
+
+    img->image[current_y][current_x] = label; 
+    count++; 
+
+    if (ImageIsValidPixel(img, current_x-1, current_y)) QueueEnqueue(queue, PixelCoordsCreate(current_x-1, current_y));
+    if (ImageIsValidPixel(img, current_x+1, current_y)) QueueEnqueue(queue, PixelCoordsCreate(current_x+1, current_y));
+    if (ImageIsValidPixel(img, current_x, current_y-1)) QueueEnqueue(queue, PixelCoordsCreate(current_x, current_y-1));
+    if (ImageIsValidPixel(img, current_x, current_y+1)) QueueEnqueue(queue, PixelCoordsCreate(current_x, current_y+1));
+
+  }
+
+  QueueDestroy(&queue);
+
+  return count;
 }
 
 /// Image Segmentation

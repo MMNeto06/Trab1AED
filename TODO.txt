@@ -2,8 +2,8 @@ imageRGB.c
 -funções básicas
 • Image ImageCopy(img) DONE
 • int ImageIsEqual(img1, img2) DONE
-• Image ImageRotate90CW(img)
-• Image ImageRotate180CW(img)
+• Image ImageRotate90CW(img) DONE
+• Image ImageRotate180CW(img) DONE
 -funções de regiões
 • int ImageRegionFillingRecursive(img, u, v, color) DONE
 • int ImageRegionFillingWithQUEUE(img, u, v, color)
