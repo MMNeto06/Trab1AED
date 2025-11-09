@@ -8,7 +8,7 @@ imageRGB.c
 • int ImageRegionFillingRecursive(img, u, v, color) DONE
 • int ImageRegionFillingWithQUEUE(img, u, v, color)
 • int ImageRegionFillingwWithSTACK(img, u, v, color)
-• int ImageSegmentation(img, fillFunct) DONE falta teste
+• int ImageSegmentation(img, fillFunct) DONE
 
 Outros
 - Análise da complexidade computacional de ImageIsEqual(img1,img2)

@@ -734,7 +734,7 @@ int ImageSegmentation(Image img, FillingFunction fillFunct) { //MIGUEL
   assert(img != NULL);
   assert(fillFunct != NULL);
 
-  // TO BE COMPLETED
+  // TO BE COMPLETED - DONE
   for(uint32 i = 0; i<img->height; i++){
     for(uint32 j = 0; j<img->width; j++){
       if(img->image[i][j] == WHITE){
