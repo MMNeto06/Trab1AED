@@ -6,8 +6,8 @@ imageRGB.c
 • Image ImageRotate180CW(img) DONE
 -funções de regiões
 • int ImageRegionFillingRecursive(img, u, v, color) DONE
-• int ImageRegionFillingWithQUEUE(img, u, v, color)
-• int ImageRegionFillingwWithSTACK(img, u, v, color)
+• int ImageRegionFillingWithQUEUE(img, u, v, color) DONE
+• int ImageRegionFillingwWithSTACK(img, u, v, color) DONE
 • int ImageSegmentation(img, fillFunct) DONE
 
 Outros
