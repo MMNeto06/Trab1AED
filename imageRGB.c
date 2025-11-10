@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "PixelCoords.h"
 #include "PixelCoordsQueue.h"
@@ -611,9 +612,14 @@ Image ImageRotate90CW(const Image img) {
   assert(img != NULL);
 
   Image rotatedImage = ImageCreate(img->height, img->width);
+  rotatedImage->num_colors = img->num_colors;
 
-  for (int i = 0; i < img->height; i++){
-    for (int j = 0; j <  img->width; j++){
+  for(int i = 2; i<img->num_colors; i++){
+    rotatedImage->LUT[i] = img->LUT[i];
+  }
+
+  for (uint32 i = 0; i < img->height; i++){
+    for (uint32 j = 0; j <  img->width; j++){
       rotatedImage->image[j][img->height-1-i] = img->image[i][j];
     }
   }
@@ -631,9 +637,14 @@ Image ImageRotate180CW(const Image img) { //SILVA
   assert(img != NULL);
 
   Image rotatedImage = ImageCreate(img->width, img->height);
+  rotatedImage->num_colors = img->num_colors;
 
-  for (int i = 0; i < img->height; i++){
-    for (int j = 0; j < img->width; j++){
+  for(int i = 2; i<img->num_colors; i++){
+    rotatedImage->LUT[i] = img->LUT[i];
+  }
+
+  for (uint32 i = 0; i < img->height; i++){
+    for (uint32 j = 0; j < img->width; j++){
       rotatedImage->image[img->height-1-i][img->width-1-j] = img->image[i][j];
     }
   }
@@ -811,7 +822,7 @@ int ImageSegmentation(Image img, FillingFunction fillFunct) { //MIGUEL
   for(uint32 i = 0; i<img->height; i++){
     for(uint32 j = 0; j<img->width; j++){
       if(img->image[i][j] == WHITE){
-        rgb_t newColor = GenerateNextColor(img->LUT[WHITE]+1000*i*i+100*j); //geração de cor poderia ser mais aleatório
+        rgb_t newColor = GenerateNextColor(i*i*i * 31 + j*j*j * 17 + i*j * 13);
         LUTAllocColor(img, newColor);
         fillFunct(img, j, i, LUTFindColor(img, newColor));
       }
