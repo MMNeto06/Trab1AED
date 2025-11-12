@@ -620,6 +620,18 @@ int ImageIsDifferent(const Image img1, const Image img2) {
 ///
 /// On success, a new image is returned.
 /// (The caller is responsible for destroying the returned image!)
+
+static void copyImageColors(const Image originalImage, const Image copyImage){
+  assert(originalImage != NULL);
+  assert(copyImage != NULL);
+  int i;
+
+  copyImage->num_colors = originalImage->num_colors;
+
+  for (i = 2; i<originalImage->num_colors; i++){
+    copyImage->LUT[i] = originalImage->LUT[i];
+  }
+}
 Image ImageRotate90CW(const Image img) { 
   assert(img != NULL);
 
