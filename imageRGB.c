@@ -47,6 +47,7 @@
 
 // FIXED SIZE of LUT for storing RGB triplets
 #define FIXED_LUT_SIZE 1000
+int COUNT = 0; //usado para análise
 
 // Internal structure for storing RGB images
 struct image {
@@ -572,18 +573,29 @@ int ImageIsEqual(const Image img1, const Image img2) { //MIGUEL
   assert(img2 != NULL);
 
   // TO BE COMPLETED - DONE
+  COUNT = 2; //feito para
   if(img1->height != img2->height || img1->width != img2->width){
+    printf("Count: %d\n", COUNT);
     return 0;
   }
+
+  COUNT++; //usado para analise experimental
   
+  if(img1==img2){
+    printf("Count: %d\n", COUNT);
+    return 1;
+  }
+
   for(uint32 i = 0; i < img1->height; i++){
     for(uint32 j = 0; j < img1->width; j++){
+      COUNT+=1; //usado para analise experimental
       if(img1->LUT[img1->image[i][j]] != img2->LUT[img2->image[i][j]] ){
+        printf("Count: %d\n", COUNT);
         return 0;
       }
     }
   }
-
+  printf("Count: %d\n", COUNT);
   return 1;
 }
 
