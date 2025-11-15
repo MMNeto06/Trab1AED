@@ -47,7 +47,7 @@
 
 // FIXED SIZE of LUT for storing RGB triplets
 #define FIXED_LUT_SIZE 1000
-int COUNT = 0; //usado para análise
+// int COUNT = 0; //usado para analise experimental
 
 // Internal structure for storing RGB images
 struct image {
@@ -283,23 +283,25 @@ void ImageDestroy(Image* imgp) {
 ///
 /// On success, a new copied image is returned.
 /// (The caller is responsible for destroying the returned image!)
-Image ImageCopy(const Image img) { //MIGUEL
+Image ImageCopy(const Image img) { 
   assert(img != NULL);
 
-  // TO BE COMPLETED - DONE
   Image imgcpy = ImageCreate(img->width, img->height);
   imgcpy->num_colors = img->num_colors;
 
+  //copiar LUT table 1 a 1 - copiar direto ocasionalmente causava seg fault
   for(int i = 2; i<img->num_colors; i++){
     imgcpy->LUT[i] = img->LUT[i];
   }
 
+  //copiar cada pixel da imagem 1 a 1 - copiar direto ocasionalmente causava seg fault
   for(uint32 i = 0; i<img->height; i++){
     for(uint32 j = 0; j<img->width; j++){
       imgcpy->image[i][j] = img->image[i][j];
     }
   }
 
+  //a cóppia não foi feita assim pois causava ocasionalmente seg fault
   //imgcpy->LUT = img->LUT;
   //imgcpy->image=img->image;
 
@@ -568,32 +570,33 @@ uint16 ImageColors(const Image img) {
 /// Check if img1 and img2 represent equal images.
 /// NOTE: The same rgb color may correspond to different LUT labels in
 /// different images!
-int ImageIsEqual(const Image img1, const Image img2) { //MIGUEL
+int ImageIsEqual(const Image img1, const Image img2) {
   assert(img1 != NULL);
   assert(img2 != NULL);
 
-  COUNT=1; //usado para analise experimental
-  if(img1==img2){
-    printf("Count: %d\n", COUNT);
+  //COUNT=1; //usado para analise experimental
+  //se a mesma imagem foi passada duas vezes, retorna logo verdadeiro
+  if(img1==img2){ 
+    //printf("Count: %d\n", COUNT); //usado para analise experimental
     return 1;
   }
 
-  COUNT+=2; //feito para
+  //COUNT+=2; //usado para analise experimental
   if(img1->height != img2->height || img1->width != img2->width){
-    printf("Count: %d\n", COUNT);
+    //printf("Count: %d\n", COUNT); //usado para analise experimental
     return 0;
   }
 
   for(uint32 i = 0; i < img1->height; i++){
     for(uint32 j = 0; j < img1->width; j++){
-      COUNT++; //usado para analise experimental
+      //COUNT++; //usado para analise experimental
       if(img1->LUT[img1->image[i][j]] != img2->LUT[img2->image[i][j]] ){
-        printf("Count: %d\n", COUNT);
+        //printf("Count: %d\n", COUNT); //usado para analise experimental
         return 0;
       }
     }
   }
-  printf("Count: %d\n", COUNT);
+  //printf("Count: %d\n", COUNT); //usado para analise experimental
   return 1;
 }
 
@@ -696,19 +699,18 @@ int ImageIsValidPixel(const Image img, int u, int v) {
 /// Region growing using the recursive flood-filling algorithm.
 uint16 originalColor;
 int originalColorFlag = 0;
-int ImageRegionFillingRecursive(Image img, int u, int v, uint16 label) { //MIGUEL
+int ImageRegionFillingRecursive(Image img, int u, int v, uint16 label) {
   assert(img != NULL);
-  //assert(ImageIsValidPixel(img, u, v)); //FALAR COM O PROF SOBRE ISTO
+  //assert(ImageIsValidPixel(img, u, v)); //removido para não explodir
   assert(label < FIXED_LUT_SIZE);
 
-  // TO BE COMPLETED - DONE
   if (!ImageIsValidPixel(img,u,v)){
     return 0;
   }
 
   int root = (originalColorFlag == 0); //verifica se é a chamada original
 
-  if (originalColorFlag == 0) {
+  if (originalColorFlag == 0) { //define cor original
     originalColor = img->image[v][u];
     originalColorFlag = 1;
   }
@@ -779,7 +781,7 @@ int ImageRegionFillingWithSTACK(Image img, int u, int v, uint16 label) {
 
 /// Region growing using a QUEUE of pixel coordinates to
 /// implement the flood-filling algorithm.
-int ImageRegionFillingWithQUEUE(Image img, int u, int v, uint16 label) { //SILVA
+int ImageRegionFillingWithQUEUE(Image img, int u, int v, uint16 label) {
   assert(img != NULL);
   assert(ImageIsValidPixel(img, u, v));
   assert(label < FIXED_LUT_SIZE);
@@ -831,15 +833,14 @@ int ImageRegionFillingWithQUEUE(Image img, int u, int v, uint16 label) { //SILVA
 /// last argument, using a function pointer.
 ///
 /// Returns the number of image regions found.
-int ImageSegmentation(Image img, FillingFunction fillFunct) { //MIGUEL
+int ImageSegmentation(Image img, FillingFunction fillFunct) {
   assert(img != NULL);
   assert(fillFunct != NULL);
 
-  // TO BE COMPLETED - DONE
   for(uint32 i = 0; i<img->height; i++){
     for(uint32 j = 0; j<img->width; j++){
       if(img->image[i][j] == WHITE){
-        rgb_t newColor = GenerateNextColor(i*i*i * 31 + j*j*j * 17 + i*j * 13);
+        rgb_t newColor = GenerateNextColor(i*i*i * 31 + j*j*j * 17 + i*j * 13); //cor fica sempre notávelmente diferente assim
         LUTAllocColor(img, newColor);
         fillFunct(img, j, i, LUTFindColor(img, newColor));
       }

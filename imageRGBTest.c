@@ -78,7 +78,8 @@ int main(int argc, char* argv[]) {
   assert(ImageIsDifferent(image_chess_1, image_chess_1_blue));
   printf("image_chess_2 and copy_image are not the same -> passed\n");
 
-  printf("9.1) ImageIsEqual Análise experimental\n");
+  //usado para a análise experimental
+  /*printf("9.1) ImageIsEqual Análise experimental\n");
   printf("Size = 1px - ");
   Image imgW = ImageLoadPPM("imgEquals/img1pxW.ppm");
   Image imgB = ImageLoadPPM("imgEquals/img1pxB.ppm");
@@ -87,10 +88,35 @@ int main(int argc, char* argv[]) {
   imgW = ImageLoadPPM("imgEquals/img2pxW.ppm");
   imgB = ImageLoadPPM("imgEquals/img2pxB.ppm");
   printf("Size = 2px - ");
-  
   assert(ImageIsDifferent(imgW, imgB));
+
+  imgW = ImageLoadPPM("imgEquals/img4pxW.ppm");
+  imgB = ImageLoadPPM("imgEquals/img4pxB.ppm");
+  printf("Size = 4px - ");
+  assert(ImageIsDifferent(imgW, imgB));
+
+  imgW = ImageLoadPPM("imgEquals/img8pxW.ppm");
+  imgB = ImageLoadPPM("imgEquals/img8pxB.ppm");
+  printf("Size = 8px - ");
+  assert(ImageIsDifferent(imgW, imgB));
+
+  imgW = ImageLoadPPM("imgEquals/img16pxW.ppm");
+  imgB = ImageLoadPPM("imgEquals/img16pxB.ppm");
+  printf("Size = 16px - ");
+  assert(ImageIsDifferent(imgW, imgB));
+
+  imgW = ImageLoadPPM("imgEquals/img32pxW.ppm");
+  imgB = ImageLoadPPM("imgEquals/img32pxB.ppm");
+  printf("Size = 32px - ");
+  assert(ImageIsDifferent(imgW, imgB));
+
+  imgW = ImageLoadPPM("imgEquals/img64pxW.ppm");
+  imgB = ImageLoadPPM("imgEquals/img64pxB.ppm");
+  printf("Size = 64px - ");
+  assert(ImageIsDifferent(imgW, imgB));
+  
   ImageDestroy(&imgW);
-  ImageDestroy(&imgB);
+  ImageDestroy(&imgB);*/
 
   printf("11) ImageRotate90CW\n");
   Image rotate90_original = ImageCreateChess(100, 60, 27, 0x00f1f3);
