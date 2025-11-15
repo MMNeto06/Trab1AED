@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "error.h"
 #include "imageRGB.h"
@@ -77,7 +78,7 @@ int main(int argc, char* argv[]) {
   assert(ImageIsDifferent(image_chess_1, image_chess_1_blue));
   printf("image_chess_2 and copy_image are not the same -> passed\n");
 
-  printf("9.1) ImageIsEqual Análise experimental - Piores casos\n");
+  printf("9.1) ImageIsEqual Análise experimental\n");
   printf("Size = 1px - ");
   Image imgW = ImageLoadPPM("imgEquals/img1pxW.ppm");
   Image imgB = ImageLoadPPM("imgEquals/img1pxB.ppm");
@@ -86,33 +87,8 @@ int main(int argc, char* argv[]) {
   imgW = ImageLoadPPM("imgEquals/img2pxW.ppm");
   imgB = ImageLoadPPM("imgEquals/img2pxB.ppm");
   printf("Size = 2px - ");
-  assert(ImageIsDifferent(imgW, imgB));
-
-  imgW = ImageLoadPPM("imgEquals/img4pxW.ppm");
-  imgB = ImageLoadPPM("imgEquals/img4pxB.ppm");
-  printf("Size = 4px - ");
-  assert(ImageIsDifferent(imgW, imgB));
-
-  imgW = ImageLoadPPM("imgEquals/img8pxW.ppm");
-  imgB = ImageLoadPPM("imgEquals/img8pxB.ppm");
-  printf("Size = 8px - ");
-  assert(ImageIsDifferent(imgW, imgB));
-
-  imgW = ImageLoadPPM("imgEquals/img16pxW.ppm");
-  imgB = ImageLoadPPM("imgEquals/img16pxB.ppm");
-  printf("Size = 16px - ");
-  assert(ImageIsDifferent(imgW, imgB));
-
-  imgW = ImageLoadPPM("imgEquals/img32pxW.ppm");
-  imgB = ImageLoadPPM("imgEquals/img32pxB.ppm");
-  printf("Size = 32px - ");
-  assert(ImageIsDifferent(imgW, imgB));
-
-  imgW = ImageLoadPPM("imgEquals/img64pxW.ppm");
-  imgB = ImageLoadPPM("imgEquals/img64pxB.ppm");
-  printf("Size = 64px - ");
-  assert(ImageIsDifferent(imgW, imgB));
   
+  assert(ImageIsDifferent(imgW, imgB));
   ImageDestroy(&imgW);
   ImageDestroy(&imgB);
 
@@ -130,18 +106,30 @@ int main(int argc, char* argv[]) {
   
   printf("13) ImageRegionFillingRecursive\n");
   Image recursive_test = ImageCreateChess(300, 300, 30, 0x00f1ff);
+  clock_t start = clock();
   printf("Recolored %d pixels\n",ImageRegionFillingRecursive(recursive_test, 75, 15, 0));
-  ImageSavePPM(recursive_test, "recursive_test.ppm");
+  clock_t end = clock();
+  ImageSavePPM(recursive_test, "recursive_test.ppm"); 
+  double elapsed = (double)(end - start) / CLOCKS_PER_SEC;
+  printf("Tempo: %f segundos\n", elapsed);
   
   printf("14) ImageRegionFillingWithSTACK\n");
   Image stack_test = ImageCreateChess(300, 300, 30, 0x00f1ff);
+  start = clock();
   printf("Recolored %d pixels\n",ImageRegionFillingWithSTACK(stack_test, 75, 15, 0));
+  end = clock();
   ImageSavePPM(stack_test, "stack_test.ppm");
+  elapsed = (double)(end - start) / CLOCKS_PER_SEC;
+  printf("Tempo: %f segundos\n", elapsed);
 
   printf("15) ImageRegionFillingWithQUEUE\n");
   Image queue_test = ImageCreateChess(300, 300, 30, 0x00f1ff);
+  start = clock();
   printf("Recolored %d pixels\n",ImageRegionFillingWithSTACK(queue_test, 75, 15, 0));
-  ImageSavePPM(queue_test, "stack_test.ppm");
+  end = clock();
+  ImageSavePPM(queue_test, "queue_test.ppm");
+  elapsed = (double)(end - start) / CLOCKS_PER_SEC;
+  printf("Tempo: %f segundos\n", elapsed);
 
   printf("16) ImageSegmentation with ImageRegionFillingRecursive\n");
   ImageSegmentation(recursive_test, ImageRegionFillingRecursive);

@@ -572,7 +572,6 @@ int ImageIsEqual(const Image img1, const Image img2) { //MIGUEL
   assert(img1 != NULL);
   assert(img2 != NULL);
 
-  // TO BE COMPLETED - DONE
   COUNT=1; //usado para analise experimental
   if(img1==img2){
     printf("Count: %d\n", COUNT);
@@ -631,15 +630,13 @@ static void copyImageColors(const Image originalImage, const Image copyImage){
     copyImage->LUT[i] = originalImage->LUT[i];
   }
 }
+
 Image ImageRotate90CW(const Image img) { 
   assert(img != NULL);
 
   Image rotatedImage = ImageCreate(img->height, img->width);
-  rotatedImage->num_colors = img->num_colors;
-
-  for(int i = 2; i<img->num_colors; i++){
-    rotatedImage->LUT[i] = img->LUT[i];
-  }
+  
+  copyImageColors(img, rotatedImage);
 
   for (uint32 i = 0; i < img->height; i++){
     for (uint32 j = 0; j <  img->width; j++){
@@ -656,15 +653,12 @@ Image ImageRotate90CW(const Image img) {
 ///
 /// On success, a new image is returned.
 /// (The caller is responsible for destroying the returned image!)
-Image ImageRotate180CW(const Image img) { //SILVA
+Image ImageRotate180CW(const Image img) { 
   assert(img != NULL);
 
   Image rotatedImage = ImageCreate(img->width, img->height);
-  rotatedImage->num_colors = img->num_colors;
 
-  for(int i = 2; i<img->num_colors; i++){
-    rotatedImage->LUT[i] = img->LUT[i];
-  }
+  copyImageColors(img, rotatedImage);
 
   for (uint32 i = 0; i < img->height; i++){
     for (uint32 j = 0; j < img->width; j++){
