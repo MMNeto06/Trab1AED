@@ -131,15 +131,33 @@ int main(int argc, char* argv[]) {
   elapsed = (double)(end - start) / CLOCKS_PER_SEC;
   printf("Tempo: %f segundos\n", elapsed);
 
-  printf("16) ImageSegmentation with ImageRegionFillingRecursive\n");
+  printf("16) ImageRegionFillingWithQUEUE Big Image\n");
+  Image queue_test_big = ImageCreateChess(3000, 3000, 3000, 0x00f1ff);
+  start = clock();
+  printf("Recolored %d pixels\n",ImageRegionFillingWithSTACK(queue_test_big, 75, 15, 0));
+  end = clock();
+  ImageSavePPM(queue_test_big, "queue_test_big.ppm");
+  elapsed = (double)(end - start) / CLOCKS_PER_SEC;
+  printf("Tempo: %f segundos\n", elapsed);
+
+  printf("17) ImageRegionFillingWithSTACK Big Image\n");
+  Image stack_test_big = ImageCreateChess(3000, 3000, 3000, 0x00f1ff);
+  start = clock();
+  printf("Recolored %d pixels\n",ImageRegionFillingWithSTACK(stack_test_big, 75, 15, 0));
+  end = clock();
+  ImageSavePPM(stack_test_big, "stack_test_big.ppm");
+  elapsed = (double)(end - start) / CLOCKS_PER_SEC;
+  printf("Tempo: %f segundos\n", elapsed);
+
+  printf("18) ImageSegmentation with ImageRegionFillingRecursive\n");
   ImageSegmentation(recursive_test, ImageRegionFillingRecursive);
   ImageSavePPM(recursive_test, "segmentation_recursive_test.ppm");
 
-  printf("17) ImageSegmentation with ImageRegionFillingWithSTACK\n");
+  printf("19) ImageSegmentation with ImageRegionFillingWithSTACK\n");
   ImageSegmentation(stack_test, ImageRegionFillingRecursive);
   ImageSavePPM(stack_test, "segmentation_stack_test.ppm");
 
-  printf("18) ImageSegmentation with ImageRegionFillingWithQUEUE\n");
+  printf("20) ImageSegmentation with ImageRegionFillingWithQUEUE\n");
   ImageSegmentation(queue_test, ImageRegionFillingRecursive);
   ImageSavePPM(queue_test, "segmentation_queue_test.ppm");
 
