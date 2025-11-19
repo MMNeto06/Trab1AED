@@ -80,43 +80,118 @@ int main(int argc, char* argv[]) {
 
   //usado para a análise experimental
   /*printf("9.1) ImageIsEqual Análise experimental\n");
-  printf("Size = 1px - ");
   Image imgW = ImageLoadPPM("imgEquals/img1pxW.ppm");
   Image imgB = ImageLoadPPM("imgEquals/img1pxB.ppm");
+  printf("Size = 1px - \n");
+  InstrReset();
   assert(ImageIsDifferent(imgW, imgB));
+  InstrPrint();
   
   imgW = ImageLoadPPM("imgEquals/img2pxW.ppm");
   imgB = ImageLoadPPM("imgEquals/img2pxB.ppm");
-  printf("Size = 2px - ");
+  printf("Size = 2px - \n");
+  InstrReset();
   assert(ImageIsDifferent(imgW, imgB));
+  InstrPrint();
 
   imgW = ImageLoadPPM("imgEquals/img4pxW.ppm");
   imgB = ImageLoadPPM("imgEquals/img4pxB.ppm");
-  printf("Size = 4px - ");
+  printf("Size = 4px - \n");
+  InstrReset();
   assert(ImageIsDifferent(imgW, imgB));
+  InstrPrint();
 
   imgW = ImageLoadPPM("imgEquals/img8pxW.ppm");
   imgB = ImageLoadPPM("imgEquals/img8pxB.ppm");
-  printf("Size = 8px - ");
+  printf("Size = 8px - \n");
+  InstrReset();
   assert(ImageIsDifferent(imgW, imgB));
+  InstrPrint();
 
   imgW = ImageLoadPPM("imgEquals/img16pxW.ppm");
   imgB = ImageLoadPPM("imgEquals/img16pxB.ppm");
-  printf("Size = 16px - ");
+  printf("Size = 16px - \n");
+  InstrReset();
   assert(ImageIsDifferent(imgW, imgB));
+  InstrPrint();
 
   imgW = ImageLoadPPM("imgEquals/img32pxW.ppm");
   imgB = ImageLoadPPM("imgEquals/img32pxB.ppm");
-  printf("Size = 32px - ");
+  printf("Size = 32px - \n");
+  InstrReset();
   assert(ImageIsDifferent(imgW, imgB));
+  InstrPrint();
 
   imgW = ImageLoadPPM("imgEquals/img64pxW.ppm");
   imgB = ImageLoadPPM("imgEquals/img64pxB.ppm");
-  printf("Size = 64px - ");
+  printf("Size = 64px - \n");
+  InstrReset();
   assert(ImageIsDifferent(imgW, imgB));
+  InstrPrint();
+
+  imgW = ImageLoadPPM("imgEquals/img100pxW.ppm");
+  imgB = ImageLoadPPM("imgEquals/img100pxB.ppm");
+  printf("Size = 100px - \n");
+  InstrReset();
+  assert(ImageIsDifferent(imgW, imgB));
+  InstrPrint();
+
+  imgW = ImageLoadPPM("imgEquals/img500pxW.ppm");
+  imgB = ImageLoadPPM("imgEquals/img500pxB.ppm");
+  printf("Size = 500px - \n");
+  InstrReset();
+  assert(ImageIsDifferent(imgW, imgB));
+  InstrPrint();
+
+  imgW = ImageLoadPPM("imgEquals/img1000pxW.ppm");
+  imgB = ImageLoadPPM("imgEquals/img1000pxB.ppm");
+  printf("Size = 1000px - \n");
+  InstrReset();
+  assert(ImageIsDifferent(imgW, imgB));
+  InstrPrint();
+
+  imgW = ImageLoadPPM("imgEquals/img5000pxW.ppm");
+  imgB = ImageLoadPPM("imgEquals/img5000pxB.ppm");
+  printf("Size = 5000px - \n");
+  InstrReset();
+  assert(ImageIsDifferent(imgW, imgB));
+  InstrPrint();
+
+  imgW = ImageLoadPPM("imgEquals/img10000pxW.ppm");
+  imgB = ImageLoadPPM("imgEquals/img10000pxB.ppm");
+  printf("Size = 10000px - \n");
+  InstrReset();
+  assert(ImageIsDifferent(imgW, imgB));
+  InstrPrint();
+
+  imgW = ImageLoadPPM("imgEquals/img100000pxW.ppm");
+  imgB = ImageLoadPPM("imgEquals/img100000pxB.ppm");
+  printf("Size = 100000px - \n");
+  InstrReset();
+  assert(ImageIsDifferent(imgW, imgB));
+  InstrPrint();
+
+  imgW = ImageLoadPPM("imgEquals/img1000000pxW.ppm");
+  imgB = ImageLoadPPM("imgEquals/img1000000pxB.ppm");
+  printf("Size = 1000000px - \n");
+  InstrReset();
+  assert(ImageIsDifferent(imgW, imgB));
+  InstrPrint();
   
   ImageDestroy(&imgW);
   ImageDestroy(&imgB);*/
+
+  //usado para a análise experimental
+  /*printf("9.2) ImageIsEqual Análise tempos adicional\n");
+  printf("Best Case != - Imagens com alturas diferentes\n");
+  InstrReset();
+  assert(!ImageIsEqual(copy_image, image_chess_2));
+  InstrPrint();
+
+  printf("Best case == - Mesma imagem passada\n");
+  InstrReset();
+  assert(ImageIsEqual(white_image, white_image));
+  InstrPrint();*/
 
   printf("11) ImageRotate90CW\n");
   Image rotate90_original = ImageCreateChess(100, 60, 27, 0x00f1f3);
