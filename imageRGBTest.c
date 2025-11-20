@@ -151,7 +151,7 @@ int main(int argc, char* argv[]) {
   printf("15) ImageRegionFillingWithQUEUE\n");
   Image queue_test = ImageCreateChess(300, 300, 30, 0x00f1ff);
   start = clock();
-  printf("Recolored %d pixels\n",ImageRegionFillingWithSTACK(queue_test, 75, 15, 0));
+  printf("Recolored %d pixels\n",ImageRegionFillingWithQUEUE(queue_test, 75, 15, 0));
   end = clock();
   ImageSavePPM(queue_test, "queue_test.ppm");
   elapsed = (double)(end - start) / CLOCKS_PER_SEC;
@@ -160,7 +160,7 @@ int main(int argc, char* argv[]) {
   printf("16) ImageRegionFillingWithQUEUE Big Image\n");
   Image queue_test_big = ImageCreateChess(3000, 3000, 3000, 0x00f1ff);
   start = clock();
-  printf("Recolored %d pixels\n",ImageRegionFillingWithSTACK(queue_test_big, 75, 15, 0));
+  printf("Recolored %d pixels\n",ImageRegionFillingWithQUEUE(queue_test_big, 75, 15, 0));
   end = clock();
   ImageSavePPM(queue_test_big, "queue_test_big.ppm");
   elapsed = (double)(end - start) / CLOCKS_PER_SEC;
@@ -168,6 +168,7 @@ int main(int argc, char* argv[]) {
 
   printf("17) ImageRegionFillingWithSTACK Big Image\n");
   Image stack_test_big = ImageCreateChess(3000, 3000, 3000, 0x00f1ff);
+  ImageSavePPM(stack_test_big, "big_original.ppm");
   start = clock();
   printf("Recolored %d pixels\n",ImageRegionFillingWithSTACK(stack_test_big, 75, 15, 0));
   end = clock();
@@ -180,11 +181,11 @@ int main(int argc, char* argv[]) {
   ImageSavePPM(recursive_test, "segmentation_recursive_test.ppm");
 
   printf("19) ImageSegmentation with ImageRegionFillingWithSTACK\n");
-  ImageSegmentation(stack_test, ImageRegionFillingRecursive);
+  ImageSegmentation(stack_test, ImageRegionFillingWithSTACK);
   ImageSavePPM(stack_test, "segmentation_stack_test.ppm");
 
   printf("20) ImageSegmentation with ImageRegionFillingWithQUEUE\n");
-  ImageSegmentation(queue_test, ImageRegionFillingRecursive);
+  ImageSegmentation(queue_test, ImageRegionFillingWithQUEUE);
   ImageSavePPM(queue_test, "segmentation_queue_test.ppm");
 
   ImageDestroy(&white_image);
@@ -199,6 +200,16 @@ int main(int argc, char* argv[]) {
   ImageDestroy(&image_3);
   ImageDestroy(&image_chess_1_blue);
   ImageDestroy(&recursive_test);
+  ImageDestroy(&rotate90_original);
+  ImageDestroy(&rotate90_test);
+  ImageDestroy(&rotate180_original);
+  ImageDestroy(&rotate180_test);
+
+  ImageDestroy(&stack_test);
+  ImageDestroy(&queue_test);
+  ImageDestroy(&queue_test_big);
+  ImageDestroy(&stack_test_big);
+
 
   return 0;
 }
