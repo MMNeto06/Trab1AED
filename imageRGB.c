@@ -291,6 +291,7 @@ Image ImageCopy(const Image img) {
   imgcpy->num_colors = img->num_colors;
 
   //copiar LUT table 1 a 1 - copiar direto ocasionalmente causava seg fault
+  // i começa em 2, pois as duas primeiras cores são sempre branco e preto
   for(int i = 2; i<img->num_colors; i++){
     imgcpy->LUT[i] = img->LUT[i];
   }
@@ -628,6 +629,7 @@ int ImageIsDifferent(const Image img1, const Image img2) {
 /// On success, a new image is returned.
 /// (The caller is responsible for destroying the returned image!)
 
+// Função Auxiliar
 static void copyImageColors(const Image originalImage, const Image copyImage){
   assert(originalImage != NULL);
   assert(copyImage != NULL);
@@ -635,6 +637,7 @@ static void copyImageColors(const Image originalImage, const Image copyImage){
 
   copyImage->num_colors = originalImage->num_colors;
 
+  // i começa em 2, pois as duas primeiras cores são sempre branco e preto
   for (i = 2; i<originalImage->num_colors; i++){
     copyImage->LUT[i] = originalImage->LUT[i];
   }
@@ -772,6 +775,7 @@ int ImageRegionFillingWithSTACK(Image img, int u, int v, uint16 label) {
     int current_x = currentCoords.u; 
     int current_y = currentCoords.v;
 
+    //Se o pixel não pertencer à região selecionada
     if (img->image[current_y][current_x] != targetValue){
       continue; 
     }
@@ -813,9 +817,11 @@ int ImageRegionFillingWithQUEUE(Image img, int u, int v, uint16 label) {
 
   while (!QueueIsEmpty(queue)){
     PixelCoords currentCoords = QueueDequeue(queue);
+
     int current_x = currentCoords.u; 
     int current_y = currentCoords.v;
 
+    //Se o pixel não pertencer à região selecionada
     if (img->image[current_y][current_x] != targetValue){
       continue; 
     }
@@ -848,6 +854,7 @@ int ImageRegionFillingWithQUEUE(Image img, int u, int v, uint16 label) {
 int ImageSegmentation(Image img, FillingFunction fillFunct) {
   assert(img != NULL);
   assert(fillFunct != NULL);
+  int regionCounter = 0; 
 
   for(uint32 i = 0; i<img->height; i++){
     for(uint32 j = 0; j<img->width; j++){
@@ -857,9 +864,10 @@ int ImageSegmentation(Image img, FillingFunction fillFunct) {
         rgb_t newColor = GenerateNextColor(i*i*i * 31 + j*j*j * 17 + i*j * 13); //cor fica sempre notávelmente diferente com esta fórmula
         LUTAllocColor(img, newColor);
         fillFunct(img, j, i, LUTFindColor(img, newColor));
+        regionCounter++;
       }
     }
   }
 
-  return 0;
+  return regionCounter;
 }

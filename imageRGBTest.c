@@ -252,15 +252,15 @@ int main(int argc, char* argv[]) {
   printf("Tempo: %f segundos\n", elapsed);
 
   printf("18) ImageSegmentation with ImageRegionFillingRecursive\n");
-  ImageSegmentation(recursive_test, ImageRegionFillingRecursive);
+  printf("Regions: %d\n", ImageSegmentation(recursive_test, ImageRegionFillingRecursive));
   ImageSavePPM(recursive_test, "segmentation_recursive_test.ppm");
 
   printf("19) ImageSegmentation with ImageRegionFillingWithSTACK\n");
-  ImageSegmentation(stack_test, ImageRegionFillingWithSTACK);
+  printf("Regions: %d\n", ImageSegmentation(stack_test, ImageRegionFillingWithSTACK));
   ImageSavePPM(stack_test, "segmentation_stack_test.ppm");
 
   printf("20) ImageSegmentation with ImageRegionFillingWithQUEUE\n");
-  ImageSegmentation(queue_test, ImageRegionFillingWithQUEUE);
+  printf("Regions: %d\n", ImageSegmentation(queue_test, ImageRegionFillingWithQUEUE));
   ImageSavePPM(queue_test, "segmentation_queue_test.ppm");
 
   ImageDestroy(&white_image);
