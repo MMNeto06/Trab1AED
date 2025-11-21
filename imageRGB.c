@@ -286,6 +286,7 @@ void ImageDestroy(Image* imgp) {
 Image ImageCopy(const Image img) { 
   assert(img != NULL);
 
+  //copiar atributos "normais" (são inteiros normais)
   Image imgcpy = ImageCreate(img->width, img->height);
   imgcpy->num_colors = img->num_colors;
 
@@ -301,7 +302,7 @@ Image ImageCopy(const Image img) {
     }
   }
 
-  //a cóppia não foi feita assim pois causava ocasionalmente seg fault
+  //a cópia não foi feita assim pois causava ocasionalmente seg fault
   //imgcpy->LUT = img->LUT;
   //imgcpy->image=img->image;
 
@@ -575,6 +576,7 @@ int ImageIsEqual(const Image img1, const Image img2) {
   assert(img2 != NULL);
 
   //COUNT=1; //usado para analise experimental
+  
   //se a mesma imagem foi passada duas vezes, retorna logo verdadeiro
   if(img1==img2){ 
     //printf("Count: %d\n", COUNT); //usado para analise experimental
@@ -582,6 +584,8 @@ int ImageIsEqual(const Image img1, const Image img2) {
   }
 
   //COUNT+=2; //usado para analise experimental
+  
+  // Se as imagens não tiverem a mesma altura e largura, retorna falso
   if(img1->height != img2->height || img1->width != img2->width){
     //printf("Count: %d\n", COUNT); //usado para analise experimental
     return 0;
@@ -590,6 +594,8 @@ int ImageIsEqual(const Image img1, const Image img2) {
   for(uint32 i = 0; i < img1->height; i++){
     for(uint32 j = 0; j < img1->width; j++){
       //COUNT++; //usado para analise experimental
+
+      //comparar pixel a pixel as duas imagens, tendo em conta a possibilidade de duas LUT tables diferentes
       if(img1->LUT[img1->image[i][j]] != img2->LUT[img2->image[i][j]] ){
         //printf("Count: %d\n", COUNT); //usado para analise experimental
         return 0;
@@ -701,33 +707,39 @@ uint16 originalColor;
 int originalColorFlag = 0;
 int ImageRegionFillingRecursive(Image img, int u, int v, uint16 label) {
   assert(img != NULL);
-  //assert(ImageIsValidPixel(img, u, v)); //removido para não explodir
+  //assert(ImageIsValidPixel(img, u, v)); //removido para não explodir, e expande o domínio da função
   assert(label < FIXED_LUT_SIZE);
 
+  //substituição do assert. assim funciona melhor devido à natureza recursiva da função
   if (!ImageIsValidPixel(img,u,v)){
     return 0;
   }
 
-  int root = (originalColorFlag == 0); //verifica se é a chamada original
+  //verifica se é a chamada original
+  int root = (originalColorFlag == 0); 
 
-  if (originalColorFlag == 0) { //define cor original
+  //define cor original
+  if (originalColorFlag == 0) { 
     originalColor = img->image[v][u];
     originalColorFlag = 1;
   }
 
+  //Se o pixel não pertencer à região selecionada
   if (img->image[v][u] != originalColor){
     return 0;
   }
 
+  //colorir pixel com cor nova
   img->image[v][u] = label;
 
+  //chamadas recursivas da função, retornam nº de pixeis coloridos
   int count = 1;
-  
   count+= ImageRegionFillingRecursive(img, u+1, v, label);
   count+= ImageRegionFillingRecursive(img, u, v+1, label);
   count+= ImageRegionFillingRecursive(img, u-1, v, label);
   count+= ImageRegionFillingRecursive(img, u, v-1, label);  
 
+  //se for raiz, dá reset à variável cor original para ser usada mais tarde numa outra chamada
   if(root) {
     originalColorFlag = 0;
   }
@@ -839,8 +851,10 @@ int ImageSegmentation(Image img, FillingFunction fillFunct) {
 
   for(uint32 i = 0; i<img->height; i++){
     for(uint32 j = 0; j<img->width; j++){
+      //ir pixel a pixel, ver se é branco
       if(img->image[i][j] == WHITE){
-        rgb_t newColor = GenerateNextColor(i*i*i * 31 + j*j*j * 17 + i*j * 13); //cor fica sempre notávelmente diferente assim
+        //colorir região branca identificada com cor pseudo aleatória usando fillFunct indicada
+        rgb_t newColor = GenerateNextColor(i*i*i * 31 + j*j*j * 17 + i*j * 13); //cor fica sempre notávelmente diferente com esta fórmula
         LUTAllocColor(img, newColor);
         fillFunct(img, j, i, LUTFindColor(img, newColor));
       }
