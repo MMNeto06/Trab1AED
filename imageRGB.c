@@ -11,12 +11,12 @@
 /// 2025
 
 // Student authors (fill in below):
-// NMec:
-// Name:
-// NMec:
-// Name:
+// NMec: 125200
+// Name: Miguel dos Santos Neto
+// NMec: 125240
+// Name: Diogo Coelho e Silva
 //
-// Date:
+// Date: 26/11/2025
 //
 
 #include "imageRGB.h"
