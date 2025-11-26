@@ -286,17 +286,15 @@ void ImageDestroy(Image* imgp) {
 Image ImageCopy(const Image img) { 
   assert(img != NULL);
 
-  //copiar atributos "normais" (são inteiros normais)
   Image imgcpy = ImageCreate(img->width, img->height);
   imgcpy->num_colors = img->num_colors;
 
-  //copiar LUT table 1 a 1 - copiar direto ocasionalmente causava seg fault
-  // i começa em 2, pois as duas primeiras cores são sempre branco e preto
+  //copiar LUT table; i começa em 2, pois as duas primeiras cores são sempre branco e preto
   for(int i = 2; i<img->num_colors; i++){
     imgcpy->LUT[i] = img->LUT[i];
   }
 
-  //copiar cada pixel da imagem 1 a 1 - copiar direto ocasionalmente causava seg fault
+  //copiar cada pixel da imagem
   for(uint32 i = 0; i<img->height; i++){
     for(uint32 j = 0; j<img->width; j++){
       imgcpy->image[i][j] = img->image[i][j];
@@ -727,7 +725,7 @@ int ImageRegionFillingRecursive(Image img, int u, int v, uint16 label) {
     originalColorFlag = 1;
   }
 
-  //Se o pixel não pertencer à região selecionada
+  //Se o pixel não pertencer à região selecionada, retorna 0
   if (img->image[v][u] != originalColor){
     return 0;
   }
@@ -858,7 +856,6 @@ int ImageSegmentation(Image img, FillingFunction fillFunct) {
 
   for(uint32 i = 0; i<img->height; i++){
     for(uint32 j = 0; j<img->width; j++){
-      //ir pixel a pixel, ver se é branco
       if(img->image[i][j] == WHITE){
         //colorir região branca identificada com cor pseudo aleatória usando fillFunct indicada
         rgb_t newColor = GenerateNextColor(i*i*i * 31 + j*j*j * 17 + i*j * 13); //cor fica sempre notávelmente diferente com esta fórmula
